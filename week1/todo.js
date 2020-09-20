@@ -1,8 +1,13 @@
 var btn = document.querySelector(".submit");
 var remove = document.querySelector(".draggable");
 var listItems = [];
+var dragItem = "";
+var dropItem = "";
 
 function dragStart(e) {
+  console.log("dragStart");
+  console.log(e.srcElement.dataset.id);
+  dragItem = e.srcElement.dataset.id;
   this.style.opacity = "0.4";
   dragSrcEl = this;
   e.dataTransfer.effectAllowed = "move";
@@ -25,19 +30,37 @@ function dragOver(e) {
 }
 
 function dragDrop(e) {
+  console.log("dragDrop");
+  console.log(e.target.dataset.id);
+  dropItem = e.target.dataset.id;
+
   if (dragSrcEl != this) {
     dragSrcEl.innerHTML = this.innerHTML;
     this.innerHTML = e.dataTransfer.getData("text/html");
   }
+
   return false;
 }
 
 function dragEnd(e) {
-  var listItens = document.querySelectorAll(".draggable");
-  [].forEach.call(listItens, function (item) {
+  console.log("dragEnd");
+  var listIts = document.querySelectorAll(".draggable");
+  [].forEach.call(listIts, function (item) {
     item.classList.remove("over");
   });
   this.style.opacity = "1";
+  if (dragItem !== dropItem && dragItem !== "") {
+    console.log("dragItem, dropItem", dragItem, dropItem);
+    var dragItemIndex = listItems.findIndex((item) => item.id == dragItem);
+    var dropItemIndex = listItems.findIndex((item) => item.id == dropItem);
+    console.log("dragItemIndex , dropItemIndex", dragItemIndex, dropItemIndex);
+    [listItems[dragItemIndex], listItems[dropItemIndex]] = [
+      listItems[dropItemIndex],
+      listItems[dragItemIndex],
+    ];
+    localStorage.setItem("todoLists", JSON.stringify(listItems));
+    renderList(listItems);
+  }
 }
 
 function addEventsDragAndDrop(el) {
@@ -49,8 +72,8 @@ function addEventsDragAndDrop(el) {
   el.addEventListener("dragend", dragEnd, false);
 }
 
-var listItens = document.querySelectorAll(".draggable");
-[].forEach.call(listItens, function (item) {
+var listIts = document.querySelectorAll(".draggable");
+[].forEach.call(listIts, function (item) {
   addEventsDragAndDrop(item);
 });
 
@@ -58,13 +81,13 @@ function renderItem(item) {
   document.getElementById("content").value = "";
   document.getElementById("createdAt").value = "";
 
-
   var listItem = document.getElementById("list-item");
 
   var div = document.createElement("div");
   var attr = document.createAttribute("draggable");
 
   div.className = "draggable";
+  div.dataset.id = item.id;
   attr.value = "true";
   div.setAttributeNode(attr);
 
@@ -73,10 +96,12 @@ function renderItem(item) {
   var find = listItems.filter((ele) => ele.id === item.id);
   if (find.length > 0) {
     if (find[0].complete) {
-      div.className = "draggable-complete";
+      // div.className = "draggable draggable-complete";
+      div.style.backgroundColor = "#90ee90";
       text.className = "text-complete";
     } else {
-      div.className = "draggable";
+      // div.className = "draggable";
+      div.style.backgroundColor = "#e0ffff";
       text.className = "text-incomplete";
     }
   }
@@ -110,10 +135,12 @@ function renderItem(item) {
     var find = listItems.filter((ele) => ele.id === item.id);
     if (find.length > 0) {
       if (!find[0].complete) {
-        div.className = "draggable-complete";
+        // div.className = "draggable draggable-complete";
+        div.style.backgroundColor = "#90ee90";
         text.className = "text-complete";
       } else {
-        div.className = "draggable";
+        // div.className = "draggable";
+        div.style.backgroundColor = "#e0ffff";
         text.className = "text-incomplete";
       }
       listItems = listItems.map((ele) => {
@@ -198,7 +225,7 @@ function renderListInLocalStorage() {
   var listInLocalStorage = JSON.parse(localStorage.getItem("todoLists"));
   if (listInLocalStorage && listInLocalStorage.length > 0) {
     listItems = listInLocalStorage;
-
+    console.log(listItems);
     renderList(listItems);
   }
 }
