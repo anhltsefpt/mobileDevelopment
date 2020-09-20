@@ -1,0 +1,124 @@
+/* @import url("https://fonts.googleapis.com/css?family=Raleway:300,800"); */
+body {
+  background-color: white;
+}
+body .list {
+  position: relative;
+  width: 600px;
+  margin: 0px auto;
+  display: block;
+}
+body .list ::-webkit-input-placeholder {
+  color: #cecece;
+}
+#createdAt {
+  width: 250px;
+}
+#content {
+  width: 250px;
+}
+
+body .list span:hover {
+  transform: rotate(180deg);
+}
+#list-item {
+  width: 600px;
+  margin: 10px auto;
+  /* padding: 0px; */
+}
+.draggable {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  will-change: transform;
+  list-style-type: none;
+  margin: 10px;
+  background-color: cadetblue;
+  color: #212121;
+  width: 250px;
+  padding: 5px;
+  cursor: move;
+  transition: all 200ms;
+  user-select: none;
+  margin: 10px auto;
+  position: relative;
+  border-radius: 2px;
+  border: 1px solid blue;
+  width: 550px;
+}
+
+.draggable-complete {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  will-change: transform;
+  list-style-type: none;
+  margin: 10px;
+  background-color: cadetblue;
+  color: #212121;
+  width: 250px;
+  padding: 5px;
+  cursor: move;
+  transition: all 200ms;
+  user-select: none;
+  margin: 10px auto;
+  position: relative;
+  border-radius: 2px;
+  border: 1px solid blue;
+  width: 550px;
+  background-color: aquamarine;
+}
+
+.text-incomplete {
+  font-style: normal;
+  text-decoration: none;
+}
+
+.text-complete {
+  font-style: italic;
+  text-decoration: line-through;
+}
+
+
+
+.created-at {
+  margin-right: 5px;
+}
+
+.right-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.draggable:hover:after {
+  opacity: 1;
+  transform: translate(0);
+}
+
+.over {
+  transform: scale(1.1, 1.1);
+}
+
+.submit {
+  width: 50px;
+  background-color: green;
+  border-radius: 2px;
+  color: white;
+  font-style: italic;
+  padding: 4px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+i {
+  z-index: 100;
+}
+
+i:hover {
+  cursor: pointer;
+}
+
