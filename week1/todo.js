@@ -56,10 +56,12 @@ var listItens = document.querySelectorAll(".draggable");
 
 function renderItem(item) {
   document.getElementById("content").value = "";
+  document.getElementById("createdAt").value = "";
+
+
   var listItem = document.getElementById("list-item");
 
   var div = document.createElement("div");
-
   var attr = document.createAttribute("draggable");
 
   div.className = "draggable";
@@ -68,6 +70,16 @@ function renderItem(item) {
 
   var text = document.createElement("div");
   text.appendChild(document.createTextNode(item.content));
+  var find = listItems.filter((ele) => ele.id === item.id);
+  if (find.length > 0) {
+    if (find[0].complete) {
+      div.className = "draggable-complete";
+      text.className = "text-complete";
+    } else {
+      div.className = "draggable";
+      text.className = "text-incomplete";
+    }
+  }
 
   var createdAt = document.createElement("div");
   createdAt.className = "created-at";
@@ -76,13 +88,14 @@ function renderItem(item) {
   var action = document.createElement("i");
   action.className = "fa fa-trash";
 
-  action.onclick = function () {
+  action.addEventListener("click", function () {
     var find = listItems.filter((ele) => ele.id === item.id);
     if (find.length > 0) {
       listItems = listItems.filter((ele) => ele.id !== item.id);
+      localStorage.setItem("todoLists", JSON.stringify(listItems));
       renderList(listItems);
     }
-  };
+  });
 
   var rightDiv = document.createElement("div");
   rightDiv.className = "right-div";
@@ -94,8 +107,6 @@ function renderItem(item) {
   div.appendChild(rightDiv);
 
   div.addEventListener("click", () => {
-    console.log("dsdsds");
-    console.log(listItems);
     var find = listItems.filter((ele) => ele.id === item.id);
     if (find.length > 0) {
       if (!find[0].complete) {
@@ -114,6 +125,7 @@ function renderItem(item) {
         }
         return ele;
       });
+      localStorage.setItem("todoLists", JSON.stringify(listItems));
     }
   });
 
@@ -144,7 +156,7 @@ function compare(a, b) {
   return 0;
 }
 
-function addNewItem() {
+function handleAdd() {
   var newItemText = document.getElementById("content").value;
   var newItemCreatedAt = document.getElementById("createdAt").value || "";
   if (newItemText != "") {
@@ -154,7 +166,21 @@ function addNewItem() {
         : new Date().getTime();
     listItems.push({
       content: newItemText,
-      createdAt: newItemCreatedAt,
+      createdAt:
+        newItemCreatedAt !== ""
+          ? new Date(newItemCreatedAt).getMonth() +
+            "/" +
+            new Date(newItemCreatedAt).getDate() +
+            "/" +
+            new Date(newItemCreatedAt).getFullYear() +
+            ", " +
+            new Intl.DateTimeFormat("default", {
+              hour12: true,
+              hour: "numeric",
+              minute: "numeric",
+              second: "numeric",
+            }).format(new Date(newItemCreatedAt))
+          : "",
       timestamp:
         newItemCreatedAt !== "" ? new Date(newItemCreatedAt).getTime() : 0,
       complete: false,
@@ -162,9 +188,19 @@ function addNewItem() {
     });
   }
   listItems.sort(compare);
+  localStorage.setItem("todoLists", JSON.stringify(listItems));
   renderList(listItems);
 }
 
-var list = document.getElementById("list-item");
+btn.addEventListener("click", handleAdd);
 
-btn.addEventListener("click", addNewItem);
+function renderListInLocalStorage() {
+  var listInLocalStorage = JSON.parse(localStorage.getItem("todoLists"));
+  if (listInLocalStorage && listInLocalStorage.length > 0) {
+    listItems = listInLocalStorage;
+
+    renderList(listItems);
+  }
+}
+
+renderListInLocalStorage();
