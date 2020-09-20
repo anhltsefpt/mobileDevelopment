@@ -1,8 +1,15 @@
+<!-- 
+  Author: Anh Le
+  Date: 09/20/2020
+  Course: ICT-4580-1
+  Description: This is an HTML file. It displays all elements of website
+ -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="todo.css" />
+    <link rel="stylesheet" href="./css/todo.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -19,7 +26,7 @@
       </span>
     </div>
     <div class="list">
-      <input type="datetime-local" step="1" id="createdAt" name="createdAt" />
+      <input type="datetime-local" step="1" id="due-date-at" name="due-date-at" />
       <input
         type="text"
         class="input"
@@ -30,6 +37,6 @@
       <span class="submit">Submit</span>
     </div>
     <div id="list-item"></div>
-    <script src="todo.js"></script>
+    <script src="./js/todo.js"></script>
   </body>
 </html>

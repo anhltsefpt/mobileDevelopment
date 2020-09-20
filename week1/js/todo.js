@@ -1,37 +1,48 @@
+/*
+  Author: Anh Le
+  Date: 09/20/2020
+  Course: ICT-4580-1
+  Description: This is javascript file. It allows user interactive with HTML Element
+  There are some methods here:
+  - Render list items
+  - Get data from localStorage
+  - Write data into localStorage
+  - Drag and drop events
+*/
+
 var btn = document.querySelector(".submit");
-var remove = document.querySelector(".draggable");
 var listItems = [];
 var dragItem = "";
 var dropItem = "";
 
 function dragStart(e) {
-  console.log("dragStart");
-  console.log(e.srcElement.dataset.id);
   dragItem = e.srcElement.dataset.id;
   this.style.opacity = "0.4";
   dragSrcEl = this;
+  // set effect
   e.dataTransfer.effectAllowed = "move";
   e.dataTransfer.setData("text/html", this.innerHTML);
 }
 
 function dragEnter(e) {
+  // scale item
   this.classList.add("over");
 }
 
 function dragLeave(e) {
   e.stopPropagation();
+  // remove scale
   this.classList.remove("over");
 }
 
 function dragOver(e) {
   e.preventDefault();
+  // set effect
   e.dataTransfer.dropEffect = "move";
   return false;
 }
 
 function dragDrop(e) {
-  console.log("dragDrop");
-  console.log(e.target.dataset.id);
   dropItem = e.target.dataset.id;
 
   if (dragSrcEl != this) {
@@ -43,22 +54,25 @@ function dragDrop(e) {
 }
 
 function dragEnd(e) {
-  console.log("dragEnd");
   var listIts = document.querySelectorAll(".draggable");
   [].forEach.call(listIts, function (item) {
+    // remove scale
     item.classList.remove("over");
   });
   this.style.opacity = "1";
   if (dragItem !== dropItem && dragItem !== "") {
-    console.log("dragItem, dropItem", dragItem, dropItem);
     var dragItemIndex = listItems.findIndex((item) => item.id == dragItem);
     var dropItemIndex = listItems.findIndex((item) => item.id == dropItem);
-    console.log("dragItemIndex , dropItemIndex", dragItemIndex, dropItemIndex);
-    [listItems[dragItemIndex], listItems[dropItemIndex]] = [
-      listItems[dropItemIndex],
-      listItems[dragItemIndex],
-    ];
-    localStorage.setItem("todoLists", JSON.stringify(listItems));
+    // check if item index is on bound
+    if (
+      (dragItemIndex >= 0) && (dragItemIndex < listItems.length) && (dropItemIndex >= 0) && (dragItemIndex < listItems.length)) {
+      [listItems[dragItemIndex], listItems[dropItemIndex]] = [
+        listItems[dropItemIndex],
+        listItems[dragItemIndex],
+      ];
+      // save into localStorage
+      localStorage.setItem("todoLists", JSON.stringify(listItems));
+    }
     renderList(listItems);
   }
 }
@@ -78,8 +92,9 @@ var listIts = document.querySelectorAll(".draggable");
 });
 
 function renderItem(item) {
+  // empty when new items added
   document.getElementById("content").value = "";
-  document.getElementById("createdAt").value = "";
+  document.getElementById("due-date-at").value = "";
 
   var listItem = document.getElementById("list-item");
 
@@ -93,9 +108,10 @@ function renderItem(item) {
 
   var text = document.createElement("div");
   text.appendChild(document.createTextNode(item.content));
+  // check is completed or not
   var find = listItems.filter((ele) => ele.id === item.id);
   if (find.length > 0) {
-    if (find[0].complete) {
+    if (find[0].completed) {
       // div.className = "draggable draggable-complete";
       div.style.backgroundColor = "#90ee90";
       text.className = "text-complete";
@@ -106,10 +122,12 @@ function renderItem(item) {
     }
   }
 
-  var createdAt = document.createElement("div");
-  createdAt.className = "created-at";
-  createdAt.appendChild(document.createTextNode(item.createdAt));
+  // create time element
+  var dueDateAt = document.createElement("div");
+  dueDateAt.className = "item-due-date-at";
+  dueDateAt.appendChild(document.createTextNode(item.dueDateAt));
 
+  // trash button
   var action = document.createElement("i");
   action.className = "fa fa-trash";
 
@@ -125,16 +143,17 @@ function renderItem(item) {
   var rightDiv = document.createElement("div");
   rightDiv.className = "right-div";
 
-  rightDiv.appendChild(createdAt);
+  rightDiv.appendChild(dueDateAt);
   rightDiv.appendChild(action);
 
   div.appendChild(text);
   div.appendChild(rightDiv);
 
+  // add click events
   div.addEventListener("click", () => {
     var find = listItems.filter((ele) => ele.id === item.id);
     if (find.length > 0) {
-      if (!find[0].complete) {
+      if (!find[0].completed) {
         // div.className = "draggable draggable-complete";
         div.style.backgroundColor = "#90ee90";
         text.className = "text-complete";
@@ -147,7 +166,7 @@ function renderItem(item) {
         if (ele.id === item.id) {
           return {
             ...ele,
-            complete: !ele.complete,
+            completed: !ele.completed,
           };
         }
         return ele;
@@ -156,14 +175,16 @@ function renderItem(item) {
     }
   });
 
+  // append into lists
   listItem.appendChild(div);
 
+  // drag or drop events
   addEventsDragAndDrop(div);
 }
 
 function renderList(items) {
   var listItem = document.getElementById("list-item");
-
+  // empty list items
   listItem.innerHTML = "";
 
   for (let index = 0; index < items.length; index++) {
@@ -173,6 +194,7 @@ function renderList(items) {
   }
 }
 
+// compare timeStamp
 function compare(a, b) {
   if (Number(a.timestamp) > Number(b.timestamp)) {
     return -1;
@@ -183,39 +205,45 @@ function compare(a, b) {
   return 0;
 }
 
+// add new event
 function handleAdd() {
   var newItemText = document.getElementById("content").value;
-  var newItemCreatedAt = document.getElementById("createdAt").value || "";
+  var newItemDueDateAt = document.getElementById("due-date-at").value || "";
+  // get title and time
   if (newItemText != "") {
     const timestamp =
-      newItemCreatedAt !== ""
-        ? new Date(newItemCreatedAt).getTime()
+    newItemDueDateAt !== ""
+        ? new Date(newItemDueDateAt).getTime()
         : new Date().getTime();
     listItems.push({
       content: newItemText,
-      createdAt:
-        newItemCreatedAt !== ""
-          ? new Date(newItemCreatedAt).getMonth() +
+      dueDateAt:
+      newItemDueDateAt !== ""
+          ? new Date(newItemDueDateAt).getMonth() +
             "/" +
-            new Date(newItemCreatedAt).getDate() +
+            new Date(newItemDueDateAt).getDate() +
             "/" +
-            new Date(newItemCreatedAt).getFullYear() +
+            new Date(newItemDueDateAt).getFullYear() +
             ", " +
             new Intl.DateTimeFormat("default", {
               hour12: true,
               hour: "numeric",
               minute: "numeric",
               second: "numeric",
-            }).format(new Date(newItemCreatedAt))
+            }).format(new Date(newItemDueDateAt))
           : "",
       timestamp:
-        newItemCreatedAt !== "" ? new Date(newItemCreatedAt).getTime() : 0,
+        newItemDueDateAt !== "" ? new Date(newItemDueDateAt).getTime() : 0,
       complete: false,
       id: timestamp,
     });
   }
+
+  // re-order list items
   listItems.sort(compare);
+  // save into local storage
   localStorage.setItem("todoLists", JSON.stringify(listItems));
+  // re-render
   renderList(listItems);
 }
 
@@ -223,11 +251,22 @@ btn.addEventListener("click", handleAdd);
 
 function renderListInLocalStorage() {
   var listInLocalStorage = JSON.parse(localStorage.getItem("todoLists"));
+  // if data is found
   if (listInLocalStorage && listInLocalStorage.length > 0) {
     listItems = listInLocalStorage;
-    console.log(listItems);
+    // check if over due date
+    const current = (new Date()).getTime()
+    listItems = listItems.map((item) => {
+      if (item.timestamp < current) {
+        return {
+          ...item,
+          completed: true
+        }
+      }
+      return item
+    })
     renderList(listItems);
   }
 }
-
+// first step, get from localStorage
 renderListInLocalStorage();
