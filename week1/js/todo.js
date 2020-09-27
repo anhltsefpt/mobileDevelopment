@@ -112,11 +112,9 @@ function renderItem(item) {
   var find = listItems.filter((ele) => ele.id === item.id);
   if (find.length > 0) {
     if (find[0].completed) {
-      // div.className = "draggable draggable-complete";
       div.style.backgroundColor = "#90ee90";
       text.className = "text-complete";
     } else {
-      // div.className = "draggable";
       div.style.backgroundColor = "#e0ffff";
       text.className = "text-incomplete";
     }
@@ -154,11 +152,9 @@ function renderItem(item) {
     var find = listItems.filter((ele) => ele.id === item.id);
     if (find.length > 0) {
       if (!find[0].completed) {
-        // div.className = "draggable draggable-complete";
         div.style.backgroundColor = "#90ee90";
         text.className = "text-complete";
       } else {
-        // div.className = "draggable";
         div.style.backgroundColor = "#e0ffff";
         text.className = "text-incomplete";
       }
@@ -183,9 +179,9 @@ function renderItem(item) {
 }
 
 function renderList(items) {
-  var listItem = document.getElementById("list-item");
+  var listItem = $("#list-item");
   // empty list items
-  listItem.innerHTML = "";
+  listItem.empty();
 
   for (let index = 0; index < items.length; index++) {
     if (items[index].content !== "") {
