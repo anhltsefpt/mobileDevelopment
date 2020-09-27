@@ -10,7 +10,7 @@
   - Drag and drop events
 */
 
-var btn = document.querySelector(".submit");
+var btn = $(".submit");
 var listItems = [];
 var dragItem = "";
 var dropItem = "";
@@ -93,10 +93,10 @@ var listIts = document.querySelectorAll(".draggable");
 
 function renderItem(item) {
   // empty when new items added
-  document.getElementById("content").value = "";
-  document.getElementById("due-date-at").value = "";
+  $("#content").val("");
+  $("#due-date-at").val("");
 
-  var listItem = document.getElementById("list-item");
+  var listItem = $("#list-item");
 
   var div = document.createElement("div");
   var attr = document.createAttribute("draggable");
@@ -207,8 +207,8 @@ function compare(a, b) {
 
 // add new event
 function handleAdd() {
-  var newItemText = document.getElementById("content").value;
-  var newItemDueDateAt = document.getElementById("due-date-at").value || "";
+  var newItemText = $("#content").value;
+  var newItemDueDateAt = $("#due-date-at").value || "";
   // get title and time
   if (newItemText != "") {
     const timestamp =
