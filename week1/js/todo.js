@@ -176,7 +176,7 @@ function renderItem(item) {
   });
 
   // append into lists
-  listItem.appendChild(div);
+  listItem.append(div);
 
   // drag or drop events
   addEventsDragAndDrop(div);
@@ -207,8 +207,9 @@ function compare(a, b) {
 
 // add new event
 function handleAdd() {
-  var newItemText = $("#content").value;
-  var newItemDueDateAt = $("#due-date-at").value || "";
+  var newItemText = $("#content").val();
+  var newItemDueDateAt = $("#due-date-at").val() || "";
+  
   // get title and time
   if (newItemText != "") {
     const timestamp =
@@ -234,7 +235,7 @@ function handleAdd() {
           : "",
       timestamp:
         newItemDueDateAt !== "" ? new Date(newItemDueDateAt).getTime() : 0,
-      complete: false,
+      completed: false,
       id: timestamp,
     });
   }
@@ -247,7 +248,7 @@ function handleAdd() {
   renderList(listItems);
 }
 
-btn.addEventListener("click", handleAdd);
+btn.click(handleAdd);
 
 function renderListInLocalStorage() {
   var listInLocalStorage = JSON.parse(localStorage.getItem("todoLists"));
