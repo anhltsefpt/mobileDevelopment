@@ -4,9 +4,27 @@
   Course: ICT-4580-1
   Description: CSS file uses for decorate elements.
 */
-
+html,
 body {
-  background-color: #add8e6
+  box-sizing: border-box;
+}
+
+html {
+  /* body will set it's height based on its parent, which is html */
+  height: 100%;
+
+  /* set full width as well */
+  width: 100%;
+}
+body {
+  /* min-height is needed for pages that might scroll, ie they may contain _more_ than 100% of viewport height */
+  min-height: 100%;
+
+  /* needed to prevent unwanted scroll-bars */
+  margin: 0;
+  padding: 0;
+
+  /* This is just so we can tell the body block apart from the app container */
 }
 
 .introduction {
@@ -31,17 +49,17 @@ body {
   margin-top: 10px;
 }
 
+#list-item {
+  width: 600px;
+  margin: 10px auto;
+}
+
 #due-date-at {
   width: 250px;
 }
 #content {
   width: 250px;
   padding: 3px;
-}
-
-#list-item {
-  width: 600px;
-  margin: 10px auto;
 }
 
 .submit {
@@ -145,4 +163,49 @@ i {
 
 i:hover {
   cursor: pointer;
+}
+
+@media only screen and (max-width: 600px) {
+  .introduction {
+    box-sizing: border-box;
+    width: 100%;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .list {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  #list-item {
+    width: 100%;
+    margin: 0px;
+  }
+
+  #due-date-at {
+    width: fit-content;
+    margin-top: 10px;
+  }
+  #content {
+    width: fit-content;
+    margin-top: 10px;
+    padding: 2px 2px 3px 2px;
+    margin-left: 10px;
+  }
+
+  .submit {
+    margin-top: 10px;
+    margin-left: 10px;
+  }
+
+  .draggable {
+    width: 100%;
+    box-sizing: border-box;
+  }
 }
